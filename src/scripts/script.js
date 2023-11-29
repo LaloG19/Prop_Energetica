@@ -1,6 +1,6 @@
 
 //Sección de variables	
-let pos = false, panIdeal = -1, batIdeal = -1, invIdeal = -1;  
+let pos = false, panIdeal = -1, batIdeal = -1, invIdeal = -1, horaProm = 0, potPromBanco=0;  
 
 let paneles = [
     {
@@ -88,7 +88,7 @@ function maxAmp(){
 
 function calcularConsumo(){
     paneles.forEach(panel => {
-        if (panel.cantidadMax() > consumoDia) {
+        if (panel.cantidadMax() > consumoMes) {
             console.log(`El panel ${panel.nombre} es el indicado para ti`);
             panIdeal = panel;
         }
@@ -97,13 +97,13 @@ function calcularConsumo(){
     if (panIdeal== -1) {
         throw new Error('No hay paneles para tu consumo');
     } else{
-        calcularBatería();
+        console.log(`Se necesita el panel ${panIdeal}`);
     }
 }
 
 function calcularBatería(){
     baterias.forEach(bateria => {
-        if (bateria.cantidadMax() > consumoDia) {
+        if (bateria.cantidadMax() > (consumoMes*2)) {
             console.log(`La batería ${bateria.nombre} es la indicada para ti`);
             batIdeal = bateria;
             //Maybe tendría que poner exit aquí, cuando sea capaz de cubrir el consumo. Lo mismo en calcularPaneles
@@ -113,7 +113,7 @@ function calcularBatería(){
     if (batIdeal == -1) {
         throw new Error('No hay baterías para tu consumo');
     } else{
-        calcularInversor();
+        console.log(`Se necesita la bateria ${batIdeal}`);
     }
 }
 
@@ -127,48 +127,48 @@ function calcularInversor(){
 
         if (invIdeal == -1) {
             throw new Error('No hay inversores para tu consumo');
-        } 
-        /*         if (batIdeal == -1) {
-            throw new Error('No hay baterías para tu consumo');
         } else{
-            calcularInversor();
-        } */
-
+            console.log(`Se necesita el inversor ${invIdeal}`);
+        }
     });
+}
+function calcularHProm(){
+    horaProm = hora
 }
 
 
-
 //Apróximado, 3500 kw/h es el consumo promedio de una casa en México
-consumoDia = prompt("Ingrese su consumo diario en Kw/h");
+consumoMes = prompt("Ingrese su consumo diario en Kw/h");
 
 //Se multiplica por 1.3 para obtener un margen de carga para el sistema.
-consumoDia = consumoDia * 1.3;
+consumoMes = consumoMes * 1.3;
 
 //Próximamente, el conteo de horas pico se obtendrá dependiendo de la ubicación del usuario
-horasPico = prompt("Ingrese la cantidad de horas pico en su ciudad");
+horasPicoMax = prompt("Ingrese la cantidad de horas pico en su ciudad");
+horasPicoMin = prompt("Ingrese la cantidad de horas minimas en su ciudad");
 
-switch (consumoDia) {
-    case (consumoDia<=1900):
+switch (consumoMes) {
+    case (consumoMes<=1900):
         console.log("El sistema será de 12 voltios");
         sysVoltage = 12;
         break;
-    case (consumoDia>1900 && consumoDia<4000):
+    case (consumoMes>1900 && consumoMes<4000):
         console.log("El sistema será de 24 voltios");
         sysVoltage = 24;
         break;
-    case (consumoDia>4000 && consumoDia<7000):
+    case (consumoMes>4000 && consumoMes<7000):
         console.log("El sistema será de 48 voltios");
         sysVoltage = 48;
         break;  
     default:
         throw new Error('El sistema es demasiado grande para un hogar, consulta con un especialista');
-        break;
 }
 
-potPicoBanco = consumoDia / horasPico;
+potPicoBanco = consumoMes / horasPicoMax;
 
-//Se obtendrá el número mayor más cercano
+calcularConsumo();
+
+
 cantPaneles = Math.ceil(potPicoBanco / panIdeal.watts);
 residuo = cantPaneles % 2;
 
@@ -177,6 +177,12 @@ if (residuo != 0) {
 }
 
 wattSys = cantPaneles * panIdeal.watts;
-invNecesario = wattSys/sysVoltage;
 
+invNecesario = wattSys/sysVoltage;
+calcularInversor();
+
+calcularHProm();
+calcularPotPromBanco();
+
+calcularBatería();
 //Sólo se usan controladores mppt
