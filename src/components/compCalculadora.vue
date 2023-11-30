@@ -1,14 +1,28 @@
 <template>
-  <form action="/" class="frmCalculadora col-md-12" @submit.prevent="calcular">
+  <form class="frmCalculadora col-md-12" @submit.prevent>
     <h1>Calculadora</h1>
     <input v-model="consumo" type="text" placeholder="Consumo mensual (kWh)" class="frmConsumo">
     <input v-model="horasMax" type="text" placeholder="Horas pico máximas (Hrs)" class="frmHorasMax">
     <input v-model="horasMin" type="text" placeholder="Horas pico mínimas (Hrs)" class="frmHorasMin">
 
-    <button type="submit" class="button"> 
+    <button   class="button" @click="calcular"> 
       <span>Calcular</span> 
-    </button>
+    </button> 
   </form>
+
+  <div v-if="mostrarResultados">
+      <p>
+        Tu sistema tiene un consumo con margen funcional de {{ consumoMes }} kWh mensuales.
+        El sistema se calculó para tener un Voltaje de {{ sysVoltage }} voltios,
+        además de un wattage de {{ sysWatt }} watts.
+
+        Ahora bien, los componentes seleccionados fueron:
+        Paneles: Se necesita de {{ cantPaneles }} paneles de nombre {{ panIdeal.nombre }}
+        Inversor: {{ invIdeal.nombre }}
+        Baterías: Se necesitan de {{ cantBat }} baterías de nombre {{ batIdeal.nombre }}
+      </p>
+    </div>
+
 </template>
 
 <script>
@@ -16,70 +30,240 @@ import { ref } from 'vue';
 
 export default {
   setup() {
-    // Cambiar el tipo de dato a String para permitir números decimales
-    const consumo = ref('');
-    const horasMax = ref('');
-    const horasMin = ref('');
+    let consumo = ref('');
+    let horasMax = ref('');
+    let horasMin = ref('');
+    let mostrarResultados = ref(false);
+    let consumoMes = ref(0);
+    let horasPicoMax = ref(0);
+    let horasPicoMin = ref(0);
+    let sysVoltage = ref(0);
+    let sysWatt = ref(0);
+    let panIdeal = ref([]);
+    let batIdeal = ref([]);
+    let invIdeal = ref([]);
+    let cantPaneles = ref(0);
+    let cantBat = ref(0);
+    let potPicoBanco = ref(0);
+    let residuo = ref(0);
+    let horaProm = ref(0);
+    let potPromBanco = ref(0);
 
-    // Función para manejar el evento de submit
-    const calcular = (consumo, horasMax, horasMin) => {
-  // Convertir a números antes de realizar cálculos
-  const consumoNum = parseFloat(consumo);
-  const horasMaxNum = parseFloat(horasMax);
-  const horasMinNum = parseFloat(horasMin);
+    let paneles = [
+      {
+        nombre: "Panel 1: 200 watts",
+        watts: 200,
+        cantidad: 7,
+        precio: 2000,
+        cantidadMax: maxWatts
+      },
+      {
+        nombre: "Panel 2: 450 watts",
+        watts: 450,
+        cantidad: 12,
+        precio: 4000,
+        cantidadMax: maxWatts
+      },
+      {
+        nombre: "Panel 3: 750 watts",
+        watts: 750,
+        cantidad: 25,
+        precio: 7000,
+        cantidadMax: maxWatts
+      }
+    ];
 
-  // Validar que los valores sean números válidos
-  if (isNaN(consumoNum) || isNaN(horasMaxNum) || isNaN(horasMinNum)) {
-    console.error('Ingrese valores numéricos válidos');
-    return;
-  }
+    let baterias = [
+      {
+        nombre: "Batería 1: 50 amp",
+        amp: 50,
+        cantidad: 10,
+        precio: 2000,
+        cantidadMax: maxAmp
+      },
+      {
+        nombre: "Batería 2: 150 amp",
+        amp: 150,
+        cantidad: 70,
+        precio: 4000,
+        cantidadMax: maxAmp
+      },
+      {
+        nombre: "Batería 3: 200 amp",
+        amp: 200,
+        cantidad: 140,
+        precio: 7000,
+        cantidadMax: maxAmp
+      }
+    ];
 
-  // Lógica de cálculo
-  console.log('Consumo:', consumoNum);
-  console.log('Horas pico máximas:', horasMaxNum);
-  console.log('Horas pico mínimas:', horasMinNum);
+    let inversores = [
+      {
+        nombre: "Inversor 1: 3000 watts",
+        watts: 3000,
+        cantidad: 3,
+        precio: 4500
+      },
+      {
+        nombre: "Inversor 2: 7000 watts",
+        watts: 7000,
+        cantidad: 2,
+        precio: 8000
+      },
+      {
+        nombre: "Inversor 3: 12000 watts",
+        watts: 12000,
+        cantidad: 2,
+        precio: 10000
+      },
+      {
+        nombre: "Inversor 4: 30000 watts",
+        watts: 30000,
+        cantidad: 1,
+        precio: 18000
+      }
+    ];
 
-  // Calcular el sistema ideal
-  try {
-    calcularSysVol();
-    calcularPotPicoBanco();
-    calcularPanel();
-    calcularCantPaneles();
-    calcularSysWatt();
-    calcularInversor();
-    calcularHProm();
-    calcularPotPromBanco();
-    calcularBateria();
+    function maxWatts() {
+      return (this.watts * (this.cantidad + 1));
+    }
 
-    // Imprimir resultados
-    console.log(
-      `\n \n \n 
-      Tu sistema tiene un consumo con margen funcional de ${consumoNum} kWh mensuales. \n
-      El sistema se calculó para tener un Voltaje de ${sysVoltage} voltios, \n
-      además de un wattage de ${sysWatt} watts. \n
+    function maxAmp() {
+      return (this.amp * (this.cantidad + 1));
+    }
 
-      Ahora bien, los componentes seleccionados fueron: \n
-      Paneles: ${cantPaneles} ${panIdeal.nombre} \n
-      Inversor: ${invIdeal.nombre} \n
-      Baterías: ${batIdeal.nombre} \n`
-    );
-  } catch (error) {
-    console.error('Error durante el cálculo:', error.message);
-  }
-};
+    const calcular = () => {
+      console.log('La función calcular se está ejecutando');
 
-// Resto del código (setup, exportación, etc.)
+      const consumoNum = parseFloat(consumo.value);
+      const horasMaxNum = parseFloat(horasMax.value);
+      const horasMinNum = parseFloat(horasMin.value);
+
+      if (isNaN(consumoNum) || isNaN(horasMaxNum) || isNaN(horasMinNum)) {
+        console.error('Ingrese valores numéricos válidos');
+        return;
+      }
+
+      // Asignar los valores a las variables locales y globales
+      consumoMes.value = consumoNum;
+      horasPicoMax.value = horasMaxNum;
+      horasPicoMin.value = horasMinNum;
+
+      //4 Aumento del consumo mensual para tener un margen de error
+      consumoMes.value = consumoMes.value * 1.3;
+
+      //5 Calculo del Voltaje del sistema
+      if (consumoMes.value <= 1900) {
+        sysVoltage.value = 12;
+      } else if (consumoMes.value > 1900 && consumoMes.value < 4000) {
+        sysVoltage.value = 24;
+      } else if (consumoMes.value > 4000 && consumoMes.value < 7000) {
+        sysVoltage.value = 48;
+      } else {
+        console.log('El consumo mensual es: ' + consumoMes.value);
+        throw new Error('El sistema es demasiado grande para un hogar, consulta con un especialista');
+      }
+
+      //6 Calculo de la potencia pico del banco
+      potPicoBanco.value = consumoMes.value / horasPicoMax.value;
+
+      //7 Calculo de panel ideal
+      for (const panel of paneles) {
+        if (panel.cantidadMax() > consumoMes.value) {
+          panIdeal.value = panel;
+          console.log('El panel ideal es: ' + panIdeal.value.nombre);
+          break;
+        }
+      }
+
+      if (panIdeal.value == -1) {
+        throw new Error('No hay paneles para tu consumo');
+    } else{
+        console.log("Se ha completado el calculo para paneles");
+    }
+
+      //8 Calculo de la cantidad de paneles
+      cantPaneles.value = potPicoBanco.value / panIdeal.value.watts;  
+      residuo.value = cantPaneles.value % 2;
+
+      //9 Ajuste de la cantidad de paneles
+      if (residuo.value != 0) {
+        cantPaneles.value = Math.ceil(cantPaneles.value);
+        console.log('La cantidad de paneles es: ' + cantPaneles.value);
+      }
+      if (panIdeal.value == -1) {
+        throw new Error('No hay paneles para tu consumo');
+      }
+
+      //10 Calculo del wattage del sistema
+      sysWatt.value = cantPaneles.value * panIdeal.value.watts;
+      
+
+      //11 Calculo del inversor ideal
+      for (const inversor of inversores) {
+        console.log('El inversor es: ' + inversor.watts + ' y el consumo es: ' + consumoMes.value);
+        if (inversor.watts > consumoMes.value) {
+          invIdeal.value = inversor;
+          break;
+        }
+      }
+      if (invIdeal.value == -1) {
+        throw new Error('No hay inversores para tu consumo');
+      }
+
+      //12 Calculo de horas promedio de sol
+      horaProm.value = (horasPicoMax.value + horasPicoMin.value) / 2;
+
+      //13 Calculo de la potencia promedio del banco
+      potPromBanco.value = consumoMes.value / horaProm.value;
+
+      //14 Calculo de la batería ideal
+      for (const bateria of baterias) {
+        if (bateria.cantidadMax() > (consumoMes.value * 2)) {
+          batIdeal.value = bateria;
+          break;
+        }
+      }
+      if (batIdeal.value == -1) {
+        throw new Error('No hay baterías para tu consumo');
+      }
+      
+      cantBat.value = ((sysVoltage.value * cantPaneles.value )/ batIdeal.value.amp)*2;
+      residuo.value = cantBat.value % 2;
+
+      //9 Ajuste de la cantidad de baterias
+      if (residuo.value != 0) {
+        cantBat.value = Math.ceil(cantBat.value);
+      }
+      console.log('La cantidad de baterías es: ' + cantBat.value + ' y el nombre es: ' + batIdeal.value.nombre);
 
 
-    // Devolver los datos y métodos que necesitas en el template
+
+
+
+      
+      // Mostrar los resultados solo si el botón de calcular ha sido presionado
+      mostrarResultados.value = true;
+    };
+
     return {
       consumo,
       horasMax,
       horasMin,
+      mostrarResultados,
       calcular,
+      consumoMes,
+      sysVoltage,
+      sysWatt,
+      panIdeal,
+      batIdeal,
+      invIdeal,
+      cantPaneles,
+      cantBat,
     };
   },
 };
+
 </script>
 
 <style scoped>

@@ -118,13 +118,13 @@ function calcularPanel(){
     if (panIdeal== -1) {
         throw new Error('No hay paneles para tu consumo');
     } else{
-        calcularBateria();
+        console.log("Se ha completado el calculo para paneles");
     }
 }
 
 function calcularBateria(){
     for (const bateria of baterias) {
-        if (bateria.cantidadMax() > (consumoMes*2)) {
+        if (bateria.cantidadMax() > (potPromBanco)) {
             console.log(`La batería ${bateria.nombre} es el indicado para ti`);
             batIdeal = bateria;
             break;
@@ -135,7 +135,7 @@ function calcularBateria(){
     if (batIdeal == -1) {
         throw new Error('No hay baterías para tu consumo');
     } else{
-        calcularInversor();
+        console.log("Se ha completado el calculo para baterías");
     }
 }
 
@@ -151,7 +151,7 @@ function calcularInversor(){
     if (invIdeal == -1) {
         throw new Error('No hay inversores para tu consumo');
     } else{
-        console.log(`\n \n \n Tu sistema ideal es el siguiente: \n Voltaje del sistema: ${sysVoltage} \n y el wattage del sistema es: Paneles: ${cantPaneles} \n Baterías: ${batIdeal.cantidad} \n Inversor: ${invIdeal.nombre}`);
+        console.log("Se ha completado el calculo para inversor");
     }
 }
 
@@ -225,6 +225,11 @@ function ALLIN(){
         `);
         /* Baterías: ${batIdeal.cantidad} ${batIdeal.nombre} \n */
 }
+
+ALLIN();
+export { ALLIN, consumoMes, horasPicoMax, horasPicoMin };
+
+
 /*
 
     1   Obtener consumo mensual

@@ -1,78 +1,9 @@
 //Variables de entrada
 let consumoMes = 0, horasPicoMax = 0, horasPicoMin = 0, potPicoBanco = 0, sysVoltage = 0, sysWatt = 0, panIdeal = -1, batIdeal = -1, invIdeal = -1, potPromBanco = 0, horaProm = 0, cantPaneles = 0, residuo = 0;
 
-let paneles = [
-    {
-        nombre: "Panel 1: 200 watts",
-        watts: 200,
-        cantidad: 7,
-        precio: 2000,
-        cantidadMax: maxWatts
-    },
-    {
-        nombre: "Panel 2: 450 watts",
-        watts: 450,
-        cantidad: 12,
-        precio: 4000,
-        cantidadMax: maxWatts
-    },
-    {
-        nombre: "Panel 3: 750 watts",
-        watts: 750,
-        cantidad: 25,
-        precio: 7000,
-        cantidadMax: maxWatts
-    }
-];
-let baterias = [
-    {
-        nombre: "Batería 1: 100 amp",
-        amp: 100,
-        cantidad: 1,
-        precio: 2000,
-        cantidadMax: maxAmp
-    },
-    {
-        nombre: "Batería 2: 150 amp",
-        amp: 150,
-        cantidad: 1,
-        precio: 4000,
-        cantidadMax: maxAmp
-    },
-    {
-        nombre: "Batería 3: 200 amp",
-        amp: 200,
-        cantidad: 1,
-        precio: 7000,
-        cantidadMax: maxAmp
-    }
-];
-let inversores = [ 
-    {
-        nombre: "Inversor 1: 1500 watts",
-        watts: 1500,
-        cantidad: 3,
-        precio: 4500
-    },
-    {
-        nombre: "Inversor 2: 3000 watts",
-        watts: 3000,
-        cantidad: 2,
-        precio: 8000 
-    },
-    {
-        nombre: "Inversor 3: 5000 watts",
-        watts: 5000,
-        cantidad: 2,
-        precio: 10000
-    },
-    {
-        nombre: "Inversor 4: 10000 watts",
-        watts: 10000,
-        cantidad: 1,
-        precio: 18000
-    }
-]
+//Aquí va un objeto con los paneles: Llevan los campos de nombre, watts, cantidad, precio y cantidadMax (función)
+//Aquí va un objeto con las baterías: Llevan los campos de nombre, amp, cantidad, precio y cantidadMax (función)
+//Aquí va un objeto con los inversores: Llevan los campos de nombre, watts, cantidad, precio
 
 function maxWatts(){
     return (this.watts * (this.cantidad + 1));

@@ -1,0 +1,72 @@
+let paneles = [
+    {
+        nombre: "Panel 1: 200 watts",
+        watts: 200,
+        cantidad: 7,
+        precio: 2000,
+        cantidadMax: maxWatts
+    },
+    {
+        nombre: "Panel 2: 450 watts",
+        watts: 450,
+        cantidad: 12,
+        precio: 4000,
+        cantidadMax: maxWatts
+    },
+    {
+        nombre: "Panel 3: 750 watts",
+        watts: 750,
+        cantidad: 25,
+        precio: 7000,
+        cantidadMax: maxWatts
+    }
+];
+let baterias = [
+    {
+        nombre: "Batería 1: 100 amp",
+        amp: 100,
+        cantidad: 15,
+        precio: 2000,
+        cantidadMax: maxAmp
+    },
+    {
+        nombre: "Batería 2: 150 amp",
+        amp: 150,
+        cantidad: 20,
+        precio: 4000,
+        cantidadMax: maxAmp
+    },
+    {
+        nombre: "Batería 3: 200 amp",
+        amp: 200,
+        cantidad: 40,
+        precio: 7000,
+        cantidadMax: maxAmp
+    }
+];
+let inversores = [ 
+    {
+        nombre: "Inversor 1: 1500 watts",
+        watts: 1500,
+        cantidad: 3,
+        precio: 4500
+    },
+    {
+        nombre: "Inversor 2: 3000 watts",
+        watts: 3000,
+        cantidad: 2,
+        precio: 8000 
+    },
+    {
+        nombre: "Inversor 3: 5000 watts",
+        watts: 5000,
+        cantidad: 2,
+        precio: 10000
+    },
+    {
+        nombre: "Inversor 4: 10000 watts",
+        watts: 10000,
+        cantidad: 1,
+        precio: 18000
+    }
+];
