@@ -9,7 +9,6 @@
       <span>Calcular</span> 
     </button> 
   </form>
-
     <div v-show="mostrarResultados" class="modal-custom">
       <h3 class="modal-title"> Resultados </h3>
         <ul class="modal-content mt-4">
@@ -24,6 +23,7 @@
           <li> El precio de los inversores es de {{ precioInversores }} MXN. El precio total de tu sistema es de {{ precioTotal }} MXN. </li>
           <li> Esperamos que este presupuesto te sea de utilidad</li>
         </ul>
+          <input class="rounded cerrar" type="button" value="CERRAR" @click="cerrarModal">
     </div>
 </template>
 
@@ -32,29 +32,11 @@ import { ref } from 'vue';
 
 export default {
   setup() {
-    let consumo = ref('');
-    let horasMax = ref('');
-    let horasMin = ref('');
-    let mostrarResultados = ref(false);
-    let consumoMes = ref(0);
-    let horasPicoMax = ref(0);
-    let horasPicoMin = ref(0);
-    let sysVoltage = ref(0);
-    let sysWatt = ref(0);
-    let panIdeal = ref([]);
-    let batIdeal = ref([]);
-    let invIdeal = ref([]);
-    let cantPaneles = ref(0);
-    let cantBat = ref(0);
-    let potPicoBanco = ref(0);
-    let residuo = ref(0);
-    let horaProm = ref(0);
-    let potPromBanco = ref(0);
-
-    let precioPaneles = ref(0);
-    let precioBaterias = ref(0);
-    let precioInversores = ref(0);
-    let precioTotal = ref(0);
+    let consumo = ref(''), horasMax = ref(''), horasMin = ref(''), mostrarResultados = ref(false), consumoMes = ref(0),
+    horasPicoMax = ref(0), horasPicoMin = ref(0), sysVoltage = ref(0), sysWatt = ref(0), panIdeal = ref([]), 
+    batIdeal = ref([]), invIdeal = ref([]), cantPaneles = ref(0), cantBat = ref(0), potPicoBanco = ref(0), 
+    residuo = ref(0), horaProm = ref(0), potPromBanco = ref, precioPaneles = ref(0), precioBaterias = ref(0), 
+    precioInversores = ref(0), precioTotal = ref(0);
     
     let paneles = [
       {
@@ -79,7 +61,6 @@ export default {
         cantidadMax: maxWatts
       }
     ];
-
     let baterias = [
       {
         nombre: "Batería 1: 50 amp",
@@ -103,7 +84,6 @@ export default {
         cantidadMax: maxAmp
       }
     ];
-
     let inversores = [
       {
         nombre: "Inversor 1: 3000 watts",
@@ -130,11 +110,9 @@ export default {
         precio: 18000
       }
     ];
-
     function maxWatts() {
       return (this.watts * (this.cantidad + 1));
     }
-
     function maxAmp() {
       return (this.amp * (this.cantidad + 1));
     }
@@ -142,19 +120,14 @@ export default {
     const calcular = () => {
       console.log('La función calcular se está ejecutando');
 
-      const consumoNum = parseFloat(consumo.value);
-      const horasMaxNum = parseFloat(horasMax.value);
-      const horasMinNum = parseFloat(horasMin.value);
+      const consumoNum = parseFloat(consumo.value), horasMaxNum = parseFloat(horasMax.value), horasMinNum = parseFloat(horasMin.value);
 
-      if (isNaN(consumoNum) || isNaN(horasMaxNum) || isNaN(horasMinNum)) {
+      if ( isNaN(consumoNum) || isNaN(horasMaxNum) || isNaN(horasMinNum) || consumoNum <= 0 || horasMaxNum <= 0 || horasMinNum <= 0){
         console.error('Ingrese valores numéricos válidos');
-        return;
-      }
+        return;      }
 
       // Asignar los valores a las variables locales y globales
-      consumoMes.value = consumoNum;
-      horasPicoMax.value = horasMaxNum;
-      horasPicoMin.value = horasMinNum;
+      consumoMes.value = consumoNum; horasPicoMax.value = horasMaxNum; horasPicoMin.value = horasMinNum;
 
       //4 Aumento del consumo mensual para tener un margen de error
       consumoMes.value = consumoMes.value * 1.3;
@@ -168,7 +141,7 @@ export default {
         sysVoltage.value = 48;
       } else {
         console.log('El consumo mensual es: ' + consumoMes.value);
-        throw new Error('El sistema es demasiado grande para un hogar, consulta con un especialista');
+        throw new Error('El sistema es demasiado grande para un hogar, consulta con un especialista');  
       }
 
       //6 Calculo de la potencia pico del banco
@@ -255,18 +228,12 @@ export default {
 
       //18 Calculo del precio total
       precioTotal.value = precioPaneles.value + precioBaterias.value + precioInversores.value;
-
-
-
-
-
-
-
-
-
       
       // Mostrar los resultados solo si el botón de calcular ha sido presionado
       mostrarResultados.value = true;
+    };
+    const cerrarModal = () => {
+      mostrarResultados.value = !mostrarResultados.value;
     };
 
     return {
@@ -286,17 +253,14 @@ export default {
       precioPaneles,
       precioBaterias,
       precioInversores,
-      precioTotal
+      precioTotal,
+      cerrarModal
     };
   },
 };
-
 </script>
 
 <style scoped>
-
-/* Modal */
-
 .modal-custom {
   position: absolute;
   top: 50%;
@@ -310,14 +274,12 @@ export default {
   border-radius: 2rem;
   text-align:justify;
 }
-
 .modal-content {
   color: #FFFFFF;
   font-weight: bold;
   font-size: 1rem;
   padding: 1rem 4rem;
 }
-
 .modal-title{
   background-color: rgba(0, 0, 0, 0.7);
   color: #FFFFFF;
@@ -325,9 +287,6 @@ export default {
   text-align: center;
   text-transform: uppercase;
 }
-/* FIN Modal */
-
-
 h1{
   font-size: 5rem;
   font-weight: 600;
@@ -346,14 +305,10 @@ h1{
 
 }
 
-  
-  /* Formulario - Contenido*/
 input::placeholder {text-align: center;}
 .frmConsumo, .frmHorasMax, .frmHorasMin { 
   flex: 1 0 3rem; min-width: 250px; max-width: 90%; padding: 0 23px; text-align: center; border-radius: 20px;
 }
-
-  /* Boton */
 .button{
     margin-top: 15px; 
     display: inline-block;
@@ -372,7 +327,6 @@ input::placeholder {text-align: center;}
   background-color: #F15C31;
   color: #FED420;
 }
-
 .button:active span{ translate: none;}
 .button span{
   display: inherit;
@@ -384,13 +338,21 @@ input::placeholder {text-align: center;}
   transition: translate 100ms
   cubic-bezier(0.175, 0.885 0.32, 1.275),
   background-color 250ms; }
+li {
+  margin-bottom: 1rem;
+  font-size: 0.75rem;
+}
+ul p {
+  text-transform: uppercase;
+}
 
-  li {
-    margin-bottom: 1rem;
-    font-size: 0.75rem;
-  }
-
-  ul p {
-    text-transform: uppercase;
-  }
+.cerrar{
+  background-color: #FED420;
+  color: #F15C31;
+  font-weight: 600;
+}
+.cerrar:hover{
+  background-color: #F15C31;
+  color: #FED420;
+}
 </style>
