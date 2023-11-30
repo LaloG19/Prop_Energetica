@@ -10,19 +10,21 @@
     </button> 
   </form>
 
-  <div v-if="mostrarResultados">
-      <p>
-        Tu sistema tiene un consumo con margen funcional de {{ consumoMes }} kWh mensuales.
-        El sistema se calculó para tener un Voltaje de {{ sysVoltage }} voltios,
-        además de un wattage de {{ sysWatt }} watts.
-
-        Ahora bien, los componentes seleccionados fueron:
-        Paneles: Se necesita de {{ cantPaneles }} paneles de nombre {{ panIdeal.nombre }}
-        Inversor: {{ invIdeal.nombre }}
-        Baterías: Se necesitan de {{ cantBat }} baterías de nombre {{ batIdeal.nombre }}
-      </p>
+    <div v-show="mostrarResultados" class="modal-custom">
+      <h3 class="modal-title"> Resultados </h3>
+        <ul class="modal-content mt-4">
+          <li> Tu sistema tiene un consumo con margen funcional de {{ consumoMes }} kWh mensuales. </li>
+          <li> El sistema se calculó para tener un Voltaje de {{ sysVoltage }} voltios. Y un wattage de {{ sysWatt }} watts. </li>
+          <p>  Ahora bien, los componentes seleccionados fueron: </p>
+          <li> Se necesita de {{ cantPaneles }} paneles de nombre {{ panIdeal.nombre }}. </li>
+          <li> El sistema necesita el inversor {{ invIdeal.nombre }}, el cuál tiene un amperaje de {{ invIdeal.watts }}. </li>
+          <li> Se necesitan de {{ cantBat }} baterías de nombre {{ batIdeal.nombre }}. Estás tienen una capacidad de {{ cantBat.amp }} amp.</li>
+          <p>  Hablando de precios: </p> 
+          <li> El precio de los paneles es de {{ precioPaneles }} MXN. El precio de las baterías es de {{ precioBaterias }} MXN. </li>
+          <li> El precio de los inversores es de {{ precioInversores }} MXN. El precio total de tu sistema es de {{ precioTotal }} MXN. </li>
+          <li> Esperamos que este presupuesto te sea de utilidad</li>
+        </ul>
     </div>
-
 </template>
 
 <script>
@@ -49,6 +51,11 @@ export default {
     let horaProm = ref(0);
     let potPromBanco = ref(0);
 
+    let precioPaneles = ref(0);
+    let precioBaterias = ref(0);
+    let precioInversores = ref(0);
+    let precioTotal = ref(0);
+    
     let paneles = [
       {
         nombre: "Panel 1: 200 watts",
@@ -237,6 +244,22 @@ export default {
       }
       console.log('La cantidad de baterías es: ' + cantBat.value + ' y el nombre es: ' + batIdeal.value.nombre);
 
+      //15 Calculo del precio de los paneles
+      precioPaneles.value = cantPaneles.value * panIdeal.value.precio;
+
+      //16 Calculo del precio de las baterías
+      precioBaterias.value = cantBat.value * batIdeal.value.precio;
+
+      //17 Calculo del precio de los inversores
+      precioInversores.value = invIdeal.value.precio;
+
+      //18 Calculo del precio total
+      precioTotal.value = precioPaneles.value + precioBaterias.value + precioInversores.value;
+
+
+
+
+
 
 
 
@@ -260,6 +283,10 @@ export default {
       invIdeal,
       cantPaneles,
       cantBat,
+      precioPaneles,
+      precioBaterias,
+      precioInversores,
+      precioTotal
     };
   },
 };
@@ -267,6 +294,39 @@ export default {
 </script>
 
 <style scoped>
+
+/* Modal */
+
+.modal-custom {
+  position: absolute;
+  top: 50%;
+  left: 56.6%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  width: 77%;
+  height: 80%;
+  padding: 1.5rem;
+  background-color: rgba(33, 37, 41 , 0.90);
+  border-radius: 2rem;
+  text-align:justify;
+}
+
+.modal-content {
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 1rem 4rem;
+}
+
+.modal-title{
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #FFFFFF;
+  border-radius: 2rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+/* FIN Modal */
+
 
 h1{
   font-size: 5rem;
@@ -324,6 +384,13 @@ input::placeholder {text-align: center;}
   transition: translate 100ms
   cubic-bezier(0.175, 0.885 0.32, 1.275),
   background-color 250ms; }
-  /* Boton */
-/* Formulario - Contenido*/
+
+  li {
+    margin-bottom: 1rem;
+    font-size: 0.75rem;
+  }
+
+  ul p {
+    text-transform: uppercase;
+  }
 </style>

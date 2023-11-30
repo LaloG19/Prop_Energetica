@@ -24,7 +24,6 @@
 import CompHome from '@/components/compHome.vue';
 import CompCalculadora from '@/components/compCalculadora.vue';
 import CompAprende from '@/components/compAprende.vue';
-import alavrega from './components/compAlavrega.vue';
 
 export default {
   name: 'App',
@@ -32,11 +31,10 @@ export default {
     CompHome,
     CompCalculadora,
     CompAprende,
-    alavrega,
   },
   data() {
     return {
-      componenteActual: 'alavrega', 
+      componenteActual: 'compHome', 
     };
   },
   methods: {
