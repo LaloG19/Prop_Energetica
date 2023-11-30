@@ -1,9 +1,9 @@
 <template>
   <form action="/" class="frmCalculadora col-md-12" @submit.prevent="calcular">
     <h1>Calculadora</h1>
-    <input v-model="consumo" type="text" placeholder="Consumo mensual (kWh)" class="frmConsumo">
-    <input v-model="horasMax" type="text" placeholder="Horas pico máximas (Hrs)" class="frmHorasMax">
-    <input v-model="horasMin" type="text" placeholder="Horas pico mínimas (Hrs)" class="frmHorasMin">
+    <input v-model="consumo" type="number" placeholder="Consumo mensual (kWh)" class="frmConsumo">
+    <input v-model="horasMax" type="number" placeholder="Horas pico máximas (Hrs)" class="frmHorasMax">
+    <input v-model="horasMin" type="number" placeholder="Horas pico mínimas (Hrs)" class="frmHorasMin">
 
     <button type="submit" class="button"> 
       <span>Calcular</span> 
@@ -16,60 +16,20 @@ import { ref } from 'vue';
 
 export default {
   setup() {
-    // Cambiar el tipo de dato a String para permitir números decimales
+    // Crear referencias reactivas
     const consumo = ref('');
     const horasMax = ref('');
     const horasMin = ref('');
 
     // Función para manejar el evento de submit
-    const calcular = (consumo, horasMax, horasMin) => {
-  // Convertir a números antes de realizar cálculos
-  const consumoNum = parseFloat(consumo);
-  const horasMaxNum = parseFloat(horasMax);
-  const horasMinNum = parseFloat(horasMin);
+    const calcular = () => {
+      // Acceder a los valores de los inputs
+      console.log('Consumo:', consumo.value);
+      console.log('Horas pico máximas:', horasMax.value);
+      console.log('Horas pico mínimas:', horasMin.value);
 
-  // Validar que los valores sean números válidos
-  if (isNaN(consumoNum) || isNaN(horasMaxNum) || isNaN(horasMinNum)) {
-    console.error('Ingrese valores numéricos válidos');
-    return;
-  }
-
-  // Lógica de cálculo
-  console.log('Consumo:', consumoNum);
-  console.log('Horas pico máximas:', horasMaxNum);
-  console.log('Horas pico mínimas:', horasMinNum);
-
-  // Calcular el sistema ideal
-  try {
-    calcularSysVol();
-    calcularPotPicoBanco();
-    calcularPanel();
-    calcularCantPaneles();
-    calcularSysWatt();
-    calcularInversor();
-    calcularHProm();
-    calcularPotPromBanco();
-    calcularBateria();
-
-    // Imprimir resultados
-    console.log(
-      `\n \n \n 
-      Tu sistema tiene un consumo con margen funcional de ${consumoNum} kWh mensuales. \n
-      El sistema se calculó para tener un Voltaje de ${sysVoltage} voltios, \n
-      además de un wattage de ${sysWatt} watts. \n
-
-      Ahora bien, los componentes seleccionados fueron: \n
-      Paneles: ${cantPaneles} ${panIdeal.nombre} \n
-      Inversor: ${invIdeal.nombre} \n
-      Baterías: ${batIdeal.nombre} \n`
-    );
-  } catch (error) {
-    console.error('Error durante el cálculo:', error.message);
-  }
-};
-
-// Resto del código (setup, exportación, etc.)
-
+      // Aquí puedes realizar cualquier lógica de cálculo que necesites
+    };
 
     // Devolver los datos y métodos que necesitas en el template
     return {
@@ -81,6 +41,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 

@@ -21,9 +21,9 @@ Además aquí encontrarás información educativa sobre la energía solar</p>
 </ul>
 
 
-<a href="#" class="button" @click="cambiarComponente('calculadora')"> 
+<!-- <a href="#" class="button" @click="cambiarComponente('calculadora')"> 
       <span> Calcular</span> 
-</a>
+</a> -->
 
 </div>
 </template>

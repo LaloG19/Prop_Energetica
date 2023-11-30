@@ -1,6 +1,10 @@
 
 //Sección de variables	
-let pos = false, panIdeal = -1, batIdeal = -1, invIdeal = -1, horaProm = 0, potPromBanco=0;  
+let pos = false;
+let panIdeal = -1, batIdeal = -1, invIdeal = -1;
+let potPromBanco=0, horaProm = 0;
+let horasPicoMax = 0, horasPicoMin = 0, consumoMes = 0, sysVoltage = 0, potPicoBanco = 0, wattSys = 0, invNecesario = 0;
+let cantPaneles = 0, residuo = 0;
 
 let paneles = [
     {
@@ -133,7 +137,7 @@ function calcularInversor(){
     });
 }
 function calcularHProm(){
-    horaProm = hora
+    horaProm = horasPicoMax/horasPicoMin;
 }
 
 

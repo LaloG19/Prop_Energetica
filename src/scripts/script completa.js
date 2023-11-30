@@ -1,5 +1,25 @@
-//Sección de variables	
-let pos = false, panIdeal = -1, batIdeal = -1, invIdeal = -1;  
+//Sólo se usan controladores mppt
+
+//Sección de variables
+
+    //Variables de entrada
+    let consumoMes = 0, horasPicoMax = 0, horasPicoMin = 0,
+
+    //Calculadas primarias
+    potPicoBanco = 0, sysVoltage = 0, sysWatt = 0,
+
+    //Ideales
+    panIdeal = -1, batIdeal = -1, invIdeal = -1,
+
+    //Calculadas secundarias
+    potPromBanco = 0,
+    horaProm = 0,
+
+    // ?(?(?(?(?(
+    cantPaneles = 0,
+    residuo = 0;
+
+//Sección de objetos
 
 let paneles = [
     {
@@ -85,8 +105,7 @@ function maxAmp(){
     return (this.amp * (this.cantidad + 1));
 }
 
-function calcularConsumo(){
-    consumoMes = consumoMes * 1.3;
+function calcularPanel(){
     for (const panel of paneles) {
         if (panel.cantidadMax() > consumoMes) {
             panIdeal = panel;
@@ -105,7 +124,7 @@ function calcularConsumo(){
 
 function calcularBateria(){
     for (const bateria of baterias) {
-        if (bateria.cantidadMax() > consumoMes) {
+        if (bateria.cantidadMax() > (consumoMes*2)) {
             console.log(`La batería ${bateria.nombre} es el indicado para ti`);
             batIdeal = bateria;
             break;
@@ -133,7 +152,6 @@ function calcularInversor(){
         throw new Error('No hay inversores para tu consumo');
     } else{
         console.log(`\n \n \n Tu sistema ideal es el siguiente: \n Voltaje del sistema: ${sysVoltage} \n y el wattage del sistema es: Paneles: ${cantPaneles} \n Baterías: ${batIdeal.cantidad} \n Inversor: ${invIdeal.nombre}`);
-        //Falta la cantidad de cada uno
     }
 }
 
@@ -142,6 +160,7 @@ function calcularHProm(){
 }
 
 function calcularSysVol(){
+    consumoMes = consumoMes * 1.3;
     switch (consumoMes) {
         case (consumoMes<=1900):
             console.log("El sistema será de 12 voltios");
@@ -160,59 +179,82 @@ function calcularSysVol(){
     }
 }
 
-function calcularPotMaxBanco(){
-    potMaxBanco = consumoMes/horasPicoMax;
+function calcularSysWatt(){
+    sysWatt = cantPaneles * panIdeal.watts;
+}
+
+function calcularPotPicoBanco(){
+    potPicoBanco = consumoMes/horasPicoMax;
 }
 
 function calcularPotPromBanco(){
     potPromBanco = consumoMes/horaProm;
 }
 
-    //CALCULO PARA INVENTARIO (SÓLO PANEL)
-//Se obtendrá el número mayor más cercano
-cantPaneles = Math.ceil(potPicoBanco / panIdeal.watts);
-residuo = cantPaneles % 2;
+function calcularCantPaneles(){
+    cantPaneles = potPicoBanco/panIdeal.watts;
+    residuo = cantPaneles % 2;
 
-if (residuo != 0) {
-    cantPaneles = cantPaneles + 1;
+    if (residuo != 0) {
+        cantPaneles = cantPaneles + 1;
+    }
 }
 
-sysWatt = cantPaneles * panIdeal.watts;
-invNecesario = sysWatt/sysVoltage;
-    //FIN CALCULO PARA INVENTARIO (SÓLO PANEL) 
+function ALLIN(){
+    //obt consumo mensual desde la UI                   Paso 1
+    //obt Horas Pico Max y Min desde la UI              Paso 3 y 4
+    calcularSysVol();                                   //Paso 2 y 5
+    calcularPotPicoBanco();                             //Paso 6
+        calcularPanel();                                //Paso 7
+    calcularCantPaneles();                              //Paso 8 y 9
+    calcularSysWatt();                                  //Paso 10
+        calcularInversor();                             //Paso 11
+    calcularHProm();                                    //Paso 12
+    calcularPotPromBanco();                             //Paso 13
+        calcularBateria();                              //Paso 14 y 15
+    console.log(
+        `\n \n \n 
+        Tu sistema tiene un consumo con margen funcional de ${consumoMes} kWh mensuales. \n
+        El sistema se calculó para tener un Voltaje de ${sysVoltage} voltios, \n
+        además de un wattage de ${sysWatt} watts. \n
 
-//Sólo se usan controladores mppt
-
+        Ahora bien, los componentes seleccionados fueron: \n
+        Paneles: ${cantPaneles} ${panIdeal.nombre} \n
+        Inversor: ${invIdeal.nombre} \n
+        Baterías: ${batIdeal.nombre} \n
+        `);
+        /* Baterías: ${batIdeal.cantidad} ${batIdeal.nombre} \n */
+}
 /*
 
-Obtener consumo mensual
-(Multiplicar por 1.3 para margen)
-Obtener horas pico máximas
-Obtener horas pico mínimas
+    1   Obtener consumo mensual
+    2   (Multiplicar por 1.3 para margen)
+    3   Obtener horas pico máximas
+    4   Obtener horas pico mínimas
 
-(Identificar el voltaje del sistema)
-(potPicoBanco) (Cuánto es le máximo que podría llegar a recibir en una hora el panel) (ConsumoMensual/HoraPicoMax)
+    5   (Identificar el voltaje del sistema)
+    6   (potPicoBanco) (Cuánto es le máximo que podría llegar a recibir en una hora el panel) (ConsumoMensual/HoraPicoMax)
 
-	(Calular Panel Ideal)
+        7   (Calular Panel Ideal)
 
-(Calcular la cantidad de paneles) (Se necesita potPicoBanco/PanelIdeal) 				
-(verificar paridad) (Si se queda a medias, es mejor tener un panel más)
-(Calcular el wattage del sistema en base a la cantidad de paneles por los watts del panel ideal) 	
+    8   (Calcular la cantidad de paneles) (Se necesita potPicoBanco/PanelIdeal) 				
+    9   (verificar paridad) (Si se queda a medias, es mejor tener un panel más)
+    10  (Calcular el wattage del sistema en base a la cantidad de paneles por los watts del panel ideal) 	
 
-	(Calcular inversor) (Se usa el wattage del sistema y el voltaje del mismo)
+        11  (Calcular inversor) (Se usa el wattage del sistema y el voltaje del mismo)
 
-(Calcular Hora Promedio) ((max+min)/2)
-(Calcular potPromBanco) (Se necesita ConsumoMensual/HoraProm)
+    12  (Calcular Hora Promedio) ((max+min)/2)
+    13  (Calcular potPromBanco) (Se necesita ConsumoMensual/HoraProm)
 
-	(Calcular las baterías ideal) (potPromBanco/batIdeal)						 
-(Calcular margen con baterías siempre al 50%) ((potPromBanco/batIdeal)*2)
+        14  (Calcular las baterías ideal) (potPromBanco/batIdeal)						 
+    15  (Calcular margen con baterías siempre al 50%) ((potPromBanco/batIdeal)*2)
 
-*Imprimir:
-Sistema tipo mppt
-Voltaje del sistema
-Wattage del sistema
-Cantidad de paneneles a X watts
-Invesor del sistema con X capacidad en watts
-Baterias del sistema con X capacidad en watts
+    16 Imprimir resultados:
+        Sistema tipo mppt
+        Voltaje del sistema
+        Wattage del sistema
+        Cantidad de paneneles a X watts
+        Invesor del sistema con X capacidad en watts
+        Baterias del sistema con X capacidad en watts
 
 */
