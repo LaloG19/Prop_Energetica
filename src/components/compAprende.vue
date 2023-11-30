@@ -25,6 +25,144 @@
       </div>
     </div>
   </div>
+
+      <!-- Cards -->
+      <div class="container mt-5">
+      <div class="row">
+        <center><h3> Documentos </h3></center>
+        <p>
+          En nuestro compromiso constante con la educación y la conciencia sobre la energía solar, hemos reunido una colección de documentos educativos que te brindarán información detallada y perspicaz sobre diversos aspectos de la energía solar y su implementación en el hogar. Estos documentos actúan como valiosos recursos complementarios a los videos educativos, proporcionándote una visión más profunda y técnica de los conceptos clave.
+        </p>
+        <!-- Card 1 -->
+        <div class="col-md-3">
+          <div class="card m-2">
+            <img
+              src="https://via.placeholder.com/150"
+              class="card-img-top"
+              alt="Placeholder Image"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Título de la Card</h5>
+              <p class="card-text">Descripción corta o contenido de la card.</p>
+              <a href="#" class="btn btn-primary">Ver más</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="col-md-3">
+          <div class="card m-2">
+            <img
+              src="https://via.placeholder.com/150"
+              class="card-img-top"
+              alt="Placeholder Image"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Título de la Card</h5>
+              <p class="card-text">Descripción corta o contenido de la card.</p>
+              <a href="#" class="btn btn-primary">Ver más</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="col-md-3">
+          <div class="card m-2">
+            <img
+              src="https://via.placeholder.com/150"
+              class="card-img-top"
+              alt="Placeholder Image"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Título de la Card</h5>
+              <p class="card-text">Descripción corta o contenido de la card.</p>
+              <a href="#" class="btn btn-primary">Ver más</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="col-md-3">
+          <div class="card m-2">
+            <img
+              src="https://via.placeholder.com/150"
+              class="card-img-top"
+              alt="Placeholder Image"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Título de la Card</h5>
+              <p class="card-text">Descripción corta o contenido de la card.</p>
+              <a href="#" class="btn btn-primary">Ver más</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="col-md-3">
+          <div class="card m-2">
+            <img
+              src="https://via.placeholder.com/150"
+              class="card-img-top"
+              alt="Placeholder Image"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Título de la Card</h5>
+              <p class="card-text">Descripción corta o contenido de la card.</p>
+              <a href="#" class="btn btn-primary">Ver más</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="col-md-3">
+          <div class="card m-2">
+            <img
+              src="https://via.placeholder.com/150"
+              class="card-img-top"
+              alt="Placeholder Image"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Título de la Card</h5>
+              <p class="card-text">Descripción corta o contenido de la card.</p>
+              <a href="#" class="btn btn-primary">Ver más</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="col-md-3">
+          <div class="card m-2">
+            <img
+              src="https://via.placeholder.com/150"
+              class="card-img-top"
+              alt="Placeholder Image"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Título de la Card</h5>
+              <p class="card-text">Descripción corta o contenido de la card.</p>
+              <a href="#" class="btn btn-primary">Ver más</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 8 -->
+        <div class="col-md-3">
+          <div class="card m-2">
+            <img
+              src="https://via.placeholder.com/150"
+              class="card-img-top"
+              alt="Placeholder Image"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Título de la Card</h5>
+              <p class="card-text">Descripción corta o contenido de la card.</p>
+              <a href="#" class="btn btn-primary">Ver más</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 </template>
 
 <script>
