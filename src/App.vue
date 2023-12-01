@@ -60,7 +60,7 @@ export default {
 <style>
 
 .sideNav {
-  height: 100vh;
+  min-height: 100vh;
   justify-content: space-between;
 
   @media screen and (max-width: 768px) {
@@ -69,6 +69,10 @@ export default {
 }
 body {
   background-color: #FED420;
+  height: 100% !important;
+}
+html{
+  height: 100% !important;
 }
 .tabs {
   width: 80%;
@@ -113,5 +117,6 @@ body {
   padding-left: 3rem;
   padding-top: 3rem;
 }
+
 </style>
 <!-- FFA000 y FFFFFF -->

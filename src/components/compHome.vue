@@ -54,6 +54,7 @@ export default {
 
 <style scoped> 
 .mainC{
+  min-height: 100vh;
   margin: 0;
   margin-right: 2vw;
   padding: 0;
@@ -122,4 +123,5 @@ li{
 
   
 .button:active span{ translate: none;}
+
 </style>
