@@ -423,4 +423,15 @@ export default {
     text-align: center;
   }
 }
+
+.card-img-top {
+  width: 258px; 
+  height: 170px;
+}
+.card-body{
+  min-height: 262px;
+}
+a{
+  width: 100%; 
+}
 </style>
