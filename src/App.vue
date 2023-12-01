@@ -66,7 +66,7 @@ export default {
   @media screen and (max-width: 768px) {
     min-width: 125px;
   }
-}
+} 
 body {
   background-color: #FED420;
   height: 100% !important;
