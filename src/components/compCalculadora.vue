@@ -5,6 +5,7 @@
     <input v-model="consumo" type="text" placeholder="Consumo mensual (kWh)" class="frmConsumo">
     <input v-model="horasMax" type="text" placeholder="Horas pico máximas (Hrs)" class="frmHorasMax">
     <input v-model="horasMin" type="text" placeholder="Horas pico mínimas (Hrs)" class="frmHorasMin">
+    <p v-if="mostrarError"> Error, los datos no son validos </p>
 
     <button   class="button" @click="calcular"> 
       <span>Calcular</span> 
@@ -33,7 +34,8 @@ import { ref } from 'vue';
 
 export default {
   setup() {
-    let consumo = ref(''), horasMax = ref(''), horasMin = ref(''), mostrarResultados = ref(false), consumoMes = ref(0),
+    let consumo = ref(''), horasMax = ref(''), horasMin = ref(''), mostrarResultados = ref(false),
+    mostrarError= ref(false), consumoMes = ref(0),
     horasPicoMax = ref(0), horasPicoMin = ref(0), sysVoltage = ref(0), sysWatt = ref(0), panIdeal = ref([]), 
     batIdeal = ref([]), invIdeal = ref([]), cantPaneles = ref(0), cantBat = ref(0), potPicoBanco = ref(0), 
     residuo = ref(0), horaProm = ref(0), potPromBanco = ref, precioPaneles = ref(0), precioBaterias = ref(0), 
@@ -125,7 +127,11 @@ export default {
 
       if ( isNaN(consumoNum) || isNaN(horasMaxNum) || isNaN(horasMinNum) || consumoNum <= 0 || horasMaxNum <= 0 || horasMinNum <= 0){
         console.error('Ingrese valores numéricos válidos');
-        return;      }
+        mostrarError.value = true;
+        
+        return;      }else{
+        mostrarError.value = false;
+        }
 
       // Asignar los valores a las variables locales y globales
       consumoMes.value = consumoNum; horasPicoMax.value = horasMaxNum; horasPicoMin.value = horasMinNum;
@@ -138,7 +144,7 @@ export default {
         sysVoltage.value = 12;
       } else if (consumoMes.value > 1900 && consumoMes.value < 4000) {
         sysVoltage.value = 24;
-      } else if (consumoMes.value > 4000 && consumoMes.value < 7000) {
+      } else if (consumoMes.value > 4000 && consumoMes.value < 14000) {
         sysVoltage.value = 48;
       } else {
         console.log('El consumo mensual es: ' + consumoMes.value);
@@ -242,6 +248,7 @@ export default {
       horasMax,
       horasMin,
       mostrarResultados,
+      mostrarError,
       calcular,
       consumoMes,
       sysVoltage,
